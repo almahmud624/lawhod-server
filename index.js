@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { MongoClient, ServerApiVersion } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 4000;
@@ -30,6 +31,15 @@ async function run() {
     app.get("/practice-areas", async (req, res) => {
       const practiceAreas = await practiceCollection.find({}).toArray();
       res.send(practiceAreas);
+    });
+
+    // get single practice area from server
+    app.get("/practice-areas/:id", async (req, res) => {
+      const practiceId = req.params.id;
+      const result = await practiceCollection.findOne({
+        _id: ObjectId(practiceId),
+      });
+      res.send(result);
     });
 
     // send review on server
