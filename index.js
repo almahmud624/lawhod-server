@@ -29,7 +29,18 @@ async function run() {
 
     // get practice areas data from server
     app.get("/practice-areas", async (req, res) => {
-      const practiceAreas = await practiceCollection.find({}).toArray();
+      const size = parseInt(req.query.size);
+      let sorted;
+      if (size === 3) {
+        sorted = { _id: -1 };
+      } else {
+        sorted = { _id: 0 };
+      }
+      const practiceAreas = await practiceCollection
+        .find({})
+        .limit(size)
+        .sort(sorted)
+        .toArray();
       res.send(practiceAreas);
     });
 
@@ -51,7 +62,13 @@ async function run() {
 
     // get review data from server
     app.get("/reviews", async (req, res) => {
-      res.send(await reviewCollection.find({}).toArray());
+      let query = {};
+      if (req.query.email) {
+        query = {
+          "reviewersInfo.email": req.query.email,
+        };
+      }
+      res.send(await reviewCollection.find(query).toArray());
     });
 
     // delete remove
