@@ -48,6 +48,11 @@ async function run() {
       const result = await reviewCollection.insertOne(reviews);
       res.send(reviews);
     });
+
+    // get review data from server
+    app.get("/reviews", async (req, res) => {
+      res.send(await reviewCollection.find({}).toArray());
+    });
   } finally {
     // client.close()
   }
