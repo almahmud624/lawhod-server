@@ -53,6 +53,34 @@ async function run() {
     app.get("/reviews", async (req, res) => {
       res.send(await reviewCollection.find({}).toArray());
     });
+
+    // delete remove
+    app.delete("/reviews/:id", async (req, res) => {
+      const result = await reviewCollection.deleteOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.send(result);
+    });
+
+    // update review
+    app.put("/reviews/:id", async (req, res) => {
+      const { reviewText, rating } = req.body;
+      if (!reviewText && !rating) {
+        return;
+      }
+      const updateReview = {
+        $set: {
+          reviewText,
+          rating,
+        },
+      };
+      const result = await reviewCollection.updateOne(
+        { _id: ObjectId(req.params.id) },
+        updateReview,
+        true
+      );
+      res.send(result);
+    });
   } finally {
     // client.close()
   }
