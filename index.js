@@ -16,7 +16,22 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const practiceCollection = client.db("law-hod").collection("practiceAreas");
     const reviewCollection = client.db("law-hod").collection("reviews");
+
+    // send practice area on server
+    app.post("/practice-areas", async (req, res) => {
+      const practiceAreas = req.body;
+      const result = await practiceCollection.insertOne(practiceAreas);
+      res.send(practiceAreas);
+    });
+
+    // get practice areas data from server
+    app.get("/practice-areas", async (req, res) => {
+      const practiceAreas = await practiceCollection.find({}).toArray();
+      res.send(practiceAreas);
+    });
+
     // send review on server
     app.post("/reviews", async (req, res) => {
       const reviews = req.body;
