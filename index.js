@@ -58,16 +58,11 @@ async function run() {
     // get practice areas data from server
     app.get("/practice-areas", async (req, res) => {
       const size = parseInt(req.query.size);
-      let sorted;
-      if (size === 3) {
-        sorted = { _id: -1 };
-      } else {
-        sorted = {};
-      }
+
       const practiceAreas = await practiceCollection
         .find({})
         .limit(size)
-        .sort(sorted)
+        .sort({ _id: -1 })
         .toArray();
       res.send(practiceAreas);
     });
@@ -96,7 +91,7 @@ async function run() {
           practiceId: req.query.practiceId,
         };
       }
-      res.send(await reviewCollection.find(query).toArray());
+      res.send(await reviewCollection.find(query).sort({ date: -1 }).toArray());
     });
 
     // get reviews by practices email
