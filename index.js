@@ -91,7 +91,7 @@ async function run() {
           practiceId: req.query.practiceId,
         };
       }
-      res.send(await reviewCollection.find(query).sort({ date: -1 }).toArray());
+      res.send(await reviewCollection.find(query).sort({ _id: -1 }).toArray());
     });
 
     // get reviews by practices email
